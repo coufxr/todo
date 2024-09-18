@@ -1,4 +1,7 @@
+import { Actions } from "./struct.slint";
+
 // 适用全局的 callback 进行注册
 export global Callbacks {
     callback todo_add(string);
+    callback option_action(Actions);
 }

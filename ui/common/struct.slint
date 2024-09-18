@@ -3,7 +3,14 @@ export struct TodoItem  {
     checked: bool,
 }
 
+export enum Actions {
+    Rename,
+    Clone,
+    Delete,
+    Move
+}
+
 export struct OptionItem {
     title: string,
-    action: string,
+    action: Actions,
 }

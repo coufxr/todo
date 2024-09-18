@@ -1,9 +1,9 @@
 import {
     Button, CheckBox,  LineEdit,  ListView,HorizontalBox, VerticalBox,
-    StandardButton, Palette, ComboBox, StandardListView
+    StandardButton, Palette, ComboBox, StandardListView, GroupBox
 } from "std-widgets.slint";
 
-import { TodoItem } from "common/struct.slint";
+import { TodoItem, OptionItem } from "common/struct.slint";
 import { Callbacks } from "common/callbacks.slint";
 import { ItemBox } from "left/item_list.slint";
 import { AddPopup } from "left/add_popup.slint";
@@ -12,11 +12,13 @@ export component AppWindow inherits Window {
     min-width: 400px;
     min-height: 400px;
     in property <string> dt_text;
-    in property <[StandardListViewItem]> option_list;
+    in property <[OptionItem]> option_list;
 
     in-out property <[TodoItem]> todo_list;
     // 在此处注册 全局的 callbacks ;
     callback todo_add <=> Callbacks.todo_add;
+    callback option_action <=> Callbacks.option_action;
+    
     add_popup := AddPopup {
         width: min(self.preferred-width, root.width);
         height: min(self.preferred-height, root.height - 80px);
@@ -60,6 +62,7 @@ export component AppWindow inherits Window {
         ListView {
             for item in root.todo_list: ItemBox {
                 item: item;
+                option_list: root.option_list;
             }
         }
     }

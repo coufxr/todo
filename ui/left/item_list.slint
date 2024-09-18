@@ -1,12 +1,10 @@
 import { CheckBox, Palette, TabWidget, ListView } from "std-widgets.slint";
 import { TodoItem, OptionItem } from "../common/struct.slint";
-
+import { Callbacks } from "../common/callbacks.slint";
 
 export component ItemBox inherits Rectangle {
     in-out property <TodoItem> item;
     in property <[OptionItem]> option_list;
-
-    callback option_action(string);
 
     HorizontalLayout {
         width: 100%;
@@ -24,29 +22,28 @@ export component ItemBox inherits Rectangle {
             width: 100px;
             x: root.width - self.width;
             y: root.y + root.height + 1px;
-            Rectangle {
-                background: #a1cad3;
-            }
 
-            ListView {
+            list_view := ListView {
                 for option in option_list: Rectangle {
+                    height: 30px;
+                    width: 100px;
                     Text {
+                        width: 100%;
                         text: option.title;
                     }
+
                     TouchArea {
                         clicked => {
-                            option_action(option.action);
+                            Callbacks.option_action(option.action);
                         }
                     }
                 }
-
             }
         }
 
-        pp := Rectangle {
+        Rectangle {
             border-color: Palette.border;
             background: Palette.background;
-            border-width: 1px;
             width: 10%;
             Text {
                 text: "···";
