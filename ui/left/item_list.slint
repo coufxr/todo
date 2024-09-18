@@ -1,0 +1,63 @@
+import { CheckBox, Palette, TabWidget, ListView } from "std-widgets.slint";
+import { TodoItem, OptionItem } from "../common/struct.slint";
+
+
+export component ItemBox inherits Rectangle {
+    in-out property <TodoItem> item;
+    in property <[OptionItem]> option_list;
+
+    callback option_action(string);
+
+    HorizontalLayout {
+        width: 100%;
+        CheckBox {
+            width: 90%;
+            toggled => {
+                item.checked = self.checked;
+            }
+            text: item.title;
+            checked: item.checked;
+        }
+
+        option_popup := PopupWindow {
+            height: 150px;
+            width: 100px;
+            x: root.width - self.width;
+            y: root.y + root.height + 1px;
+            Rectangle {
+                background: #a1cad3;
+            }
+
+            ListView {
+                for option in option_list: Rectangle {
+                    Text {
+                        text: option.title;
+                    }
+                    TouchArea {
+                        clicked => {
+                            option_action(option.action);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        pp := Rectangle {
+            border-color: Palette.border;
+            background: Palette.background;
+            border-width: 1px;
+            width: 10%;
+            Text {
+                text: "···";
+                color: green;
+            }
+
+            TouchArea {
+                clicked => {
+                    option_popup.show();
+                }
+            }
+        }
+    }
+}

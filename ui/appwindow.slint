@@ -1,90 +1,55 @@
-import { SpinBox, Button, CheckBox, Slider, LineEdit, ScrollView, ListView,
-    HorizontalBox, VerticalBox, GridBox, StandardButton, Palette } from "std-widgets.slint";
+import {
+    Button, CheckBox,  LineEdit,  ListView,HorizontalBox, VerticalBox,
+    StandardButton, Palette, ComboBox, StandardListView
+} from "std-widgets.slint";
 
-export struct TodoItem  {
-    title: string,
-    checked: bool,
-}
+import { TodoItem } from "common/struct.slint";
+import { Callbacks } from "common/callbacks.slint";
+import { ItemBox } from "left/item_list.slint";
+import { AddPopup } from "left/add_popup.slint";
 
 export component AppWindow inherits Window {
-    height: 300px;
-    width: 300px;
-    in property <string> dt_text: "当前时间";
+    min-width: 400px;
+    min-height: 400px;
+    in property <string> dt_text;
+    in property <[StandardListViewItem]> option_list;
+
     in-out property <[TodoItem]> todo_list;
-    callback todo_add(string);
+    // 在此处注册 全局的 callbacks ;
+    callback todo_add <=> Callbacks.todo_add;
+    add_popup := AddPopup {
+        width: min(self.preferred-width, root.width);
+        height: min(self.preferred-height, root.height - 80px);
+        x: (root.width - self.width) / 2;
+        y: (root.height - self.height) / 2;
+    }
 
     VerticalBox {
-        Text {
-            height: 22px;
-            font-size: 22px;
-            horizontal-alignment: center;
-            text: dt_text;
-            color: darkblue;
-        }
-
-        add_popup := PopupWindow {
-            // 居中定位
-            width: min(confirm_popup_layout.preferred-width, root.width - 80px);
-            height: min(confirm_popup_layout.preferred-height, root.height - 20px);
-            x: root.width / 2 - self.width / 2;
-            y: root.height / 2 - self.height / 2;
-            // 关闭 PopupWindow 的点击关闭
-            close-on-click: false;
-
-            Rectangle {
-                background: Palette.background;
-                border-color: Palette.border;
-                border-width: 1px;
-            }
-
-            confirm_popup_layout := Dialog {
-                height: 100%;
-                width: 100%;
-                FocusScope {
-                    todo_item_text := LineEdit {
-                        accepted(text) => {
-                            self.text = "";
-                        }
-                        placeholder-text: "需要做什么?";
-                    }
-                }
-
-                StandardButton {
-                    kind: yes;
-                    clicked => {
-                        root.todo_add(todo_item_text.text);
-                        todo_item_text.text = "";
-                        // 手动关闭
-                        add-popup.close();
-                    }
-                    enabled: todo_item_text.text != "";
-                }
-
-                StandardButton {
-                    kind: no;
-                    clicked => {
-                        // 手动关闭
-                        add-popup.close();
-                    }
-                }
+        height: 100%;
+        width: 100%;
+        Rectangle {
+            padding: 5px;
+            Text {
+                horizontal-alignment: center;
+                font-size: 22px;
+                text: dt_text;
+                color: darkblue;
             }
         }
 
-        HorizontalBox {
+        HorizontalLayout {
             height: 20px;
             width: 100%;
             Text {
-                width: 10%;
                 text: "Todo List:";
+                color: orange;
             }
 
             Rectangle {
-                width: 60%;
+                width: 65%;
             }
 
             Button {
-                height: parent.height;
-                width: 10%;
                 text: "+";
                 clicked => {
                     add_popup.show();
@@ -93,15 +58,8 @@ export component AppWindow inherits Window {
         }
 
         ListView {
-            for item in root.todo_list: HorizontalLayout {
-                CheckBox {
-                    toggled => {
-                        item.checked = self.checked;
-                    }
-
-                    text: item.title;
-                    checked: item.checked;
-                }
+            for item in root.todo_list: ItemBox {
+                item: item;
             }
         }
     }

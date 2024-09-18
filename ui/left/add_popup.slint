@@ -1,0 +1,43 @@
+import { LineEdit, StandardButton, Palette } from "std-widgets.slint";
+
+import { Callbacks } from "../common/callbacks.slint";
+
+export component AddPopup inherits PopupWindow {
+    callback close_popup;
+
+    // 关闭 PopupWindow 的点击关闭
+    close-on-click: false;
+    close_popup => {
+        self.close();
+    }
+    Rectangle {
+        background: Palette.background;
+        border-color: Palette.border;
+        border-width: 1px;
+    }
+
+    confirm_popup_layout := Dialog {
+        height: 100%;
+        width: 100%;
+        input := LineEdit {
+            placeholder-text: "需要做什么?";
+        }
+
+        StandardButton {
+            kind: yes;
+            clicked => {
+                Callbacks.todo_add(input.text);
+                input.text = "";
+                close_popup();
+            }
+            enabled: input.text != "";
+        }
+
+        StandardButton {
+            kind: no;
+            clicked => {
+                close_popup();
+            }
+        }
+    }
+}
