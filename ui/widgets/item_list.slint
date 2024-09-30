@@ -1,6 +1,7 @@
 import { CheckBox, Palette, TabWidget, ListView } from "std-widgets.slint";
-import { TodoItem, OptionItem } from "../common/struct.slint";
-import { Callbacks } from "../common/callbacks.slint";
+
+import { TodoItem, OptionItem } from "../common.slint";
+import { Callbacks } from "../callbacks.slint";
 
 export component ItemBox inherits Rectangle {
     in-out property <TodoItem> item;

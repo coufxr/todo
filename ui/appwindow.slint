@@ -3,10 +3,10 @@ import {
     StandardButton, Palette, ComboBox, StandardListView, GroupBox
 } from "std-widgets.slint";
 
-import { TodoItem, OptionItem } from "common/struct.slint";
-import { Callbacks } from "common/callbacks.slint";
-import { ItemBox } from "left/item_list.slint";
-import { AddPopup } from "left/add_popup.slint";
+import { TodoItem, OptionItem } from "common.slint";
+import { Callbacks } from "callbacks.slint";
+import { ItemBox } from "widgets/item_list.slint";
+import { AddPopup } from "widgets/add_popup.slint";
 
 export component AppWindow inherits Window {
     min-width: 400px;
@@ -18,7 +18,6 @@ export component AppWindow inherits Window {
     // 在此处注册 全局的 callbacks ;
     callback todo_add <=> Callbacks.todo_add;
     callback option_action <=> Callbacks.option_action;
-    
     add_popup := AddPopup {
         width: min(self.preferred-width, root.width);
         height: min(self.preferred-height, root.height - 80px);

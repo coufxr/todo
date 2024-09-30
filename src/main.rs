@@ -1,7 +1,11 @@
 use slint::{PlatformError, VecModel};
 use std::rc::Rc;
 
+mod controllers;
+mod models;
+mod ui;
 mod utils;
+
 use crate::utils::datetimex::today;
 
 slint::include_modules!();
@@ -26,30 +30,7 @@ fn main() -> Result<(), PlatformError> {
 
     app.set_todo_list(todo_model.clone().into());
 
-    app.set_option_list({
-        // 无法遍历枚举, 只能手动写
-        let list = vec![
-            OptionItem {
-                action: Actions::Rename,
-                title: "Rename".into(),
-            },
-            OptionItem {
-                action: Actions::Clone,
-                title: "Clone".into(),
-            },
-            OptionItem {
-                action: Actions::Delete,
-                title: "Delete".into(),
-            },
-            OptionItem {
-                action: Actions::Move,
-                title: "Move".into(),
-            },
-        ];
-        // 为什么一定要使用 Rc?
-        let options = Rc::new(VecModel::<OptionItem>::from(list));
-        options.into()
-    });
+    ui::task::create_list(&app);
 
     app.on_option_action(move |action| match action {
         Actions::Rename => {
